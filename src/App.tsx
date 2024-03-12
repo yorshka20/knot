@@ -66,7 +66,7 @@ function render(canvas: HTMLCanvasElement | undefined, x: number, y: number) {
 
     ctx.fillStyle = 'black';
 
-    ctx.translate(x / 2, y / 2 + 200);
+    ctx.translate(x / 2, y / 2 + 50);
 
     const points = requestFrameData(frame);
     // console.log('points', points);

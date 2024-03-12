@@ -19,6 +19,25 @@ class Knot implements KnotType {
     return [x * Math.cos(radius) + z * Math.sin(radius), y, z * Math.cos(radius) - x * Math.sin(radius)];
   }
 
+  static ring(t: number): FlatKnotPoint[] {
+    // vertical surface function: n1(x-a)+n2(y-b)+n3(z-c)=0
+    // n = (v2, -v1, 0)
+    // deviated v
+    const [a, b, c] = [trefoilKnot.x(t), trefoilKnot.y(t), trefoilKnot.z(t)];
+    const [dx, dy, dz] = [trefoilKnot.dx(t), trefoilKnot.dy(t), trefoilKnot.dz(t)];
+    const N = [dy, -dx, 0];
+    const points: FlatKnotPoint[] = [];
+    for (let ny = -20; ny < 20; ny += 5) {
+      // const ny = 1
+      //
+      const nx = (dy / dx) * (ny - b);
+      const nz = (-dy * (a - dx) + dx * (b - dy)) / dz + c;
+      points.push([nx, ny, nz]);
+    }
+
+    return points;
+  }
+
   toPoint(): FlatKnotPoint {
     return [this.x, this.y, this.z];
   }
@@ -32,20 +51,31 @@ interface TrefoilKnotParaFunc {
   x: (t: number) => number;
   y: (t: number) => number;
   z: (t: number) => number;
+  dx: (t: number) => number;
+  dy: (t: number) => number;
+  dz: (t: number) => number;
 }
 
 const trefoilKnot: TrefoilKnotParaFunc = {
   x: (t: number) => Math.sin(t) + 2 * Math.sin(2 * t),
-  y: (t: number) => Math.cos(t) - (2 + Math.cos(2 * t)),
+  y: (t: number) => Math.cos(t) - 2 * Math.cos(2 * t),
   z: (t: number) => -Math.sin(3 * t),
+  dx: (t: number) => Math.cos(t) + 4 * Math.cos(2 * t),
+  dy: (t: number) => -Math.sin(t) + 4 * Math.sin(2 * t),
+  dz: (t: number) => -3 * Math.cos(3 * t),
 };
 
+const knot = new Knot(100, 1, 1, 1);
+
 export function requestFrameData(f: number) {
-  const knot = new Knot(100, 0, 0, 0);
   const points = [];
-  for (let i = 0; i < 1000; i++) {
+  for (let i = 0; i < 200; i++) {
     const point = knot.update(i);
+    const rings = Knot.ring(i);
+    // center point shape
     points.push(Knot.rotate(f, point));
+    // the distributed ring points group
+    points.push(...rings.map((p) => Knot.rotate(f, p)));
   }
 
   return points;
