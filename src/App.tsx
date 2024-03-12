@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react';
 import './App.css';
 import { requestFrameData } from './core/model/knot';
 
+const size = 800;
+
 function App() {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -16,15 +18,15 @@ function App() {
 
     const pixelRatio = getPixelRatio();
 
-    canvas.width = 400 * pixelRatio;
-    canvas.height = 400 * pixelRatio;
+    canvas.width = size * pixelRatio;
+    canvas.height = size * pixelRatio;
 
-    canvas.style.width = `${400}px`;
-    canvas.style.height = `${400}px`;
+    canvas.style.width = `${size}px`;
+    canvas.style.height = `${size}px`;
 
     container.append(canvas);
 
-    render(canvas, 400 * pixelRatio, 400 * pixelRatio);
+    render(canvas, size * pixelRatio, size * pixelRatio);
 
     return () => {
       container.removeChild(canvas);
@@ -66,7 +68,7 @@ function render(canvas: HTMLCanvasElement | undefined, x: number, y: number) {
 
     ctx.fillStyle = 'black';
 
-    ctx.translate(x / 2, y / 2 + 50);
+    ctx.translate(x / 2, y / 2);
 
     const points = requestFrameData(frame);
     // console.log('points', points);
