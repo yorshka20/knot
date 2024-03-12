@@ -5,17 +5,26 @@ interface KnotType {
   z: number;
 }
 
+type FlatKnotPoint = [number, number, number];
+
 class Knot implements KnotType {
   constructor(public r: number, public x: number, public y: number, public z: number) {}
 
-  toPoint() {
+  static rotate(r: number, [x, y, z]: FlatKnotPoint): FlatKnotPoint {
+    // r is in [0-360]
+    const radius = (Math.PI * r) / 180;
+
+    // rotate against y axis
+
+    return [x * Math.cos(radius) + z * Math.sin(radius), y, z * Math.cos(radius) - x * Math.sin(radius)];
+  }
+
+  toPoint(): FlatKnotPoint {
     return [this.x, this.y, this.z];
   }
 
-  update(t: number) {
-    this.x = this.r * trefoilKnot.x(t);
-    this.y = this.r * trefoilKnot.y(t);
-    this.z = this.r * trefoilKnot.z(t);
+  update(t: number): FlatKnotPoint {
+    return [this.r * trefoilKnot.x(t), this.r * trefoilKnot.y(t), this.r * trefoilKnot.z(t)];
   }
 }
 
@@ -31,12 +40,12 @@ const trefoilKnot: TrefoilKnotParaFunc = {
   z: (t: number) => -Math.sin(3 * t),
 };
 
-export function requestFrameData() {
+export function requestFrameData(f: number) {
   const knot = new Knot(100, 0, 0, 0);
   const points = [];
-  for (let i = 0; i < 500; i++) {
-    knot.update(i);
-    points.push(knot.toPoint());
+  for (let i = 0; i < 1000; i++) {
+    const point = knot.update(i);
+    points.push(Knot.rotate(f, point));
   }
 
   return points;

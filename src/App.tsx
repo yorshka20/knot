@@ -1,8 +1,6 @@
 import { useEffect, useRef } from 'react';
 import './App.css';
-import reactLogo from './assets/react.svg';
 import { requestFrameData } from './core/model/knot';
-import viteLogo from '/vite.svg';
 
 function App() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -33,20 +31,7 @@ function App() {
     };
   }, []);
 
-  return (
-    <>
-      <div>
-        <a href='https://vitejs.dev' target='_blank'>
-          <img src={viteLogo} className='logo' alt='Vite logo' />
-        </a>
-        <a href='https://react.dev' target='_blank'>
-          <img src={reactLogo} className='logo react' alt='React logo' />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div ref={containerRef} className='container'></div>
-    </>
-  );
+  return <div ref={containerRef} className='container'></div>;
 }
 
 export default App;
@@ -65,7 +50,14 @@ function render(canvas: HTMLCanvasElement | undefined, x: number, y: number) {
     return;
   }
 
+  let frame = 0;
+
   function loop(ctx: CanvasRenderingContext2D) {
+    frame++;
+    if (frame >= 360) {
+      frame = 0;
+    }
+
     ctx.save();
 
     ctx.clearRect(0, 0, x, y);
@@ -76,7 +68,7 @@ function render(canvas: HTMLCanvasElement | undefined, x: number, y: number) {
 
     ctx.translate(x / 2, y / 2 + 200);
 
-    const points = requestFrameData();
+    const points = requestFrameData(frame);
     // console.log('points', points);
     points.forEach((point) => {
       ctx.beginPath();
@@ -85,6 +77,7 @@ function render(canvas: HTMLCanvasElement | undefined, x: number, y: number) {
     });
 
     ctx.restore();
+
     requestAnimationFrame(() => loop(ctx));
   }
 
