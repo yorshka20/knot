@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import './App.css';
-import { requestFrameData } from './core/model/knot';
+import { requestFrameData } from './knot/knot';
 
 const size = 800;
 
