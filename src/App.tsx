@@ -63,15 +63,15 @@ function render(canvas: HTMLCanvasElement | undefined, x: number, y: number) {
     ctx.save();
 
     ctx.clearRect(0, 0, x, y);
-    ctx.fillStyle = '#fff';
+    ctx.fillStyle = 'rgb(0,0,0)';
     ctx.fillRect(0, 0, x, y);
 
-    ctx.fillStyle = 'black';
+    ctx.fillStyle = '#fff';
 
     ctx.translate(x / 2, y / 2);
 
     const points = requestFrameData(frame);
-    // console.log('points', points);
+
     points.forEach((point) => {
       ctx.beginPath();
       ctx.arc(point[0], point[1], 1, 0, 2 * Math.PI);
