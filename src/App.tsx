@@ -56,7 +56,7 @@ function render(canvas: HTMLCanvasElement | undefined, x: number, y: number) {
 
   function loop(ctx: CanvasRenderingContext2D) {
     frame++;
-    if (frame >= 360) {
+    if (frame >= 3600) {
       frame = 0;
     }
 

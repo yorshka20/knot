@@ -2,9 +2,11 @@ import { Knot } from './model';
 
 const knot = new Knot(200, 1, 1, 1);
 
+const step = (2 * Math.PI) / 360;
+
 export function requestFrameData(f: number) {
   const points = [];
-  for (let i = 0; i < 130; i++) {
+  for (let i = 0; i < 2 * Math.PI; i += 3 * step) {
     const point = knot.update(i);
     // center point shape
     points.push(Knot.rotate(f, point));

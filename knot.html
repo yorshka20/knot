@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trefoil Knot with Cylinder</title>
+  </head>
+  <body>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <script>
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+
+      `
+      chatGPT solutions.
+
+      not work.
+      `;
+
+      // Trefoil knot parameters
+      const trefoilKnot = {
+        x: (t) => Math.sin(t) + 2 * Math.sin(2 * t),
+        y: (t) => Math.cos(t) - 2 * Math.cos(2 * t),
+        z: (t) => -Math.sin(3 * t),
+        dx: (t) => Math.cos(t) + 4 * Math.cos(2 * t),
+        dy: (t) => -Math.sin(t) + 4 * Math.sin(2 * t),
+        dz: (t) => -3 * Math.cos(3 * t),
+      };
+
+      // Function to draw a cylinder at given coordinates and orientation
+      function drawCylinder(x, y, z, dx, dy, dz, radius, height) {
+        const length = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        const angle = Math.acos(dz / length);
+        const axis = [dy, -dx, 0];
+        const axisLength = Math.sqrt(axis[0] * axis[0] + axis[1] * axis[1]);
+        const axisNormalized = [axis[0] / axisLength, axis[1] / axisLength, axis[2]];
+        ctx.save();
+        ctx.translate(x * 100, y * 100);
+        ctx.rotate(angle);
+        ctx.beginPath();
+        ctx.moveTo(0, -radius * 100);
+        for (let i = 0; i <= height * 100; i += 2) {
+          const theta = (i / (height * 100)) * Math.PI * 2;
+          const x = radius * 100 * Math.cos(theta);
+          const y = radius * 100 * Math.sin(theta);
+          ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // Function to draw the trefoil knot with cylinders
+      function drawTrefoilKnotWithCylinders() {
+        const numPoints = 100;
+        const step = (2 * Math.PI) / numPoints;
+        for (let t = 0; t < 2 * Math.PI; t += step) {
+          const x = trefoilKnot.x(t);
+          const y = trefoilKnot.y(t);
+          const z = trefoilKnot.z(t);
+          const dx = trefoilKnot.dx(t);
+          const dy = trefoilKnot.dy(t);
+          const dz = trefoilKnot.dz(t);
+          drawCylinder(x, y, z, dx, dy, dz, 0.1, 0.5);
+        }
+      }
+
+      // Clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw trefoil knot with cylinders
+      drawTrefoilKnotWithCylinders();
+    </script>
+  </body>
+</html>

@@ -6,7 +6,7 @@ export class Knot implements KnotType {
 
   static rotate(r: number, [x, y, z]: FlatKnotPoint): FlatKnotPoint {
     // r is in [0-360]
-    const radius = (Math.PI * r) / 180;
+    const radius = (Math.PI * r) / 4 / 180;
 
     // rotate against y axis
 
@@ -61,12 +61,13 @@ export class Knot implements KnotType {
     // cheat: drawing a sphericalShell
 
     // console.log([a, b, c]);
-    for (let i = 0; i < 180; i += 20) {
-      for (let j = 0; j < 360; j += 20) {
-        const [x, y, z] = sphericalShellCoordinates(a, b, c, 50, (Math.PI * i) / 180, (Math.PI * j) / 180);
-        points.push([x, y, z]);
-      }
+    // for (let i = 0; i < 180; i += 20) {
+    const i = 30;
+    for (let j = 0; j < 360; j += 20) {
+      const [x, y, z] = sphericalShellCoordinates(a, b, c, 50, (Math.PI * (i + j)) / 180, (Math.PI * j) / 180);
+      points.push([x, y, z]);
     }
+    // }
 
     return points;
   }
